@@ -152,6 +152,7 @@ def main():
         elif opcao == '3':
             valor = float(input("Valor do Pix: "))
             destino = input("Chave do destinatário: ")
+            senha = input("digite a senha para confima o pix:")
             usuario.fazer_pix(valor, destino)
         elif opcao == '4':
             valor = float(input("Valor do depósito: "))
@@ -176,3 +177,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
