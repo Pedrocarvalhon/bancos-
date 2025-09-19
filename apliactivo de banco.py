@@ -1,4 +1,6 @@
 from datetime import datetime
+#serve para importar a função datetime.now() do Python.
+#Você usa ela dentro de registrar_extrato para salvar a data e hora de cada operação.
 
 # ===================== CRIAR CONTA =====================
 def criar_conta():
@@ -13,18 +15,19 @@ def criar_conta():
         'agencia': agencia,
         'conta': conta,
         'senha': senha,
-        'saldo': 0.0,   # começa sem dinheiro
+        'saldo': 0.0,
         'pix': {},
-        'cartao_limite': 1000.0,  # limite inicial
+        'cartao_limite': 200.0,
         'extrato': []
     }
 
     print("\n✅ Conta criada com sucesso!\n")
     return cliente
 
+
 # ===================== LOGIN =====================
 def login(cliente):
-    print("\n======= LOGIN ==========")
+    print("\n======= LOGIN =============")
     agencia = input("Agência: ")
     conta = input("Conta: ")
     senha = input("Senha: ")
@@ -34,13 +37,15 @@ def login(cliente):
         return False
     return True
 
+
 # ===================== PÁGINA INICIAL =====================
 def mostrar_pagina_inicial(cliente):
-    print("\n=========== BEM-VINDO ===============")
+    print("\n=========== BEM-VINDO ===========================")
     print(f"Nome: {cliente['nome']}")
     print(f"Agência: {cliente['agencia']}")
     print(f"Saldo: R${cliente['saldo']:.2f}")
-    print(f"Cartão virtual: R${cliente['cartao_limite']:.2f}\n")
+    print(f"Cartão de Credito: R${cliente['cartao_limite']:.2f}\n")
+
 
 # ===================== MENU =====================
 def menu():
@@ -56,9 +61,10 @@ def menu():
     print("0 - Sair")
     print("==================================")
 
+
 # ===================== OPERAÇÕES =====================
 def consultar_chave_pix(cliente):
-    print("\n===== SUAS CHAVES PIX =====")
+    print("\n===== SUAS CHAVES PIX ==================")
     if not cliente['pix']:
         print("Nenhuma chave Pix cadastrada.")
     else:
@@ -66,17 +72,22 @@ def consultar_chave_pix(cliente):
             print(f"{tipo.capitalize()}: {chave}")
     input("\n👉 Pressione ENTER para voltar ao menu...")
 
+
 def cadastrar_chave_pix(cliente):
-    print("\n===== CADASTRAR CHAVE PIX =====")
+    print("\n===== CADASTRAR CHAVE PIX ==============")
     tipo = input("Digite o tipo da chave (cpf, celular, email, aleatoria): ").lower()
     nova_chave = input("Digite a nova chave Pix: ")
+
     cliente['pix'][tipo] = nova_chave
     registrar_extrato(cliente, f"Nova chave Pix cadastrada ({tipo}): {nova_chave}")
-    print("✅ Chave Pix cadastrada com sucesso!")
+    print("✅ Chave Pix cadastrada com sucesso!}pix realizado")
     input("\n👉 Pressione ENTER para voltar ao menu...")
+    mostrar_pagina_inicial(cliente)
+
+
 
 def fazer_pix(cliente):
-    print("\n===== FAZER PIX =====")
+    print("\n===== FAZER PIX ========================")
     try:
         valor = float(input("Digite o valor do Pix: ").replace(",", "."))
     except ValueError:
@@ -90,53 +101,65 @@ def fazer_pix(cliente):
     else:
         cliente['saldo'] -= valor
         registrar_extrato(cliente, f"Pix de R$ {valor:.2f} enviado para {destino}")
-        print(f"✅ Pix de R$ {valor:.2f} realizado com sucesso!")
+        input("digite a senha para confirma o pix : ")
+        print(f"✅ Pix de R$ {valor:.2f}")
         print(f"Saldo atual: R$ {cliente['saldo']:.2f}")
-
-    input("\n👉 Pressione ENTER para voltar ao menu...")
-
+        input("\n👉 Pressione ENTER para voltar ao menu...")
+        mostrar_pagina_inicial(cliente)
 
 def deposito(cliente):
-    print("\n===== DEPÓSITO =====")
-    valor = float(input("Digite o valor do depósito: "))
+    print("\n===== DEPÓSITO ===========================")
+    valor = float(input("Digite o valor do depósito: ").replace(",", "."))
     cliente['saldo'] += valor
     registrar_extrato(cliente, f"Depósito realizado: R$ {valor:.2f}")
     print(f"✅ Depósito de R$ {valor:.2f} realizado com sucesso!")
-    input("\n👉 Pressione ENTER para voltar ao menu...")
+    print(f"Saldo atual: R$ {cliente['saldo']:.2f} realiazado com sucesso!")
+    input("\n👉 Pressione ENTER para voltar ao menu...'} pix realizado")
+    
+    mostrar_pagina_inicial(cliente)
+
 
 def saque(cliente):
-    print("\n===== SAQUE =====")
-    valor = float(input("Digite o valor do saque: "))
+    print("\n===== SAQUE =============================")
+    valor = float(input("Digite o valor do saque: ").replace(",", "."))
 
-    # também permite saldo negativo
-    cliente['saldo'] -= valor
-    registrar_extrato(cliente, f"Saque realizado: R$ {valor:.2f}")
-    print(f"✅ Saque de R$ {valor:.2f} realizado com sucesso!")
+    if cliente['saldo'] - valor < -cliente.get('cartao_limite', 0):
+        print("⚠️ Saldo + limite insuficiente para saque.")
+    else:
+        cliente['saldo'] -= valor
+        registrar_extrato(cliente, f"Saque realizado: R$ {valor:.2f}")
+        print(f"✅ Saque de R$ {valor:.2f} realizado com sucesso!")
+        print(f"Saldo atual: R$ {cliente['saldo']:.2f}")
+        input("\n👉 Pressione ENTER para voltar ao menu...")
 
-    input("\n👉 Pressione ENTER para voltar ao menu...")
+       
+
 
 def alterar_limite_cartao(cliente):
     print("\n===== ALTERAR LIMITE DO CARTÃO =====")
-    novo_limite = float(input("Digite o novo limite do cartão: "))
+    novo_limite = float(input("Digite o novo limite do cartão: ").replace(",", "."))
     cliente['cartao_limite'] = novo_limite
     registrar_extrato(cliente, f"Limite do cartão alterado para R$ {novo_limite:.2f}")
     print(f"✅ Limite alterado para R$ {novo_limite:.2f}")
     input("\n👉 Pressione ENTER para voltar ao menu...")
 
+
 def alterar_senha(cliente):
-    print("\n===== ALTERAR SENHA =====")
+    print("\n===== ALTERAR SENHA ==============")
     nova_senha = input("Digite a nova senha: ")
     cliente['senha'] = nova_senha
     registrar_extrato(cliente, "Senha alterada com sucesso.")
     print("✅ Senha alterada com sucesso!")
     input("\n👉 Pressione ENTER para voltar ao menu...")
 
+
 def registrar_extrato(cliente, descricao):
     data = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     cliente['extrato'].append(f"[{data}] {descricao}")
 
+
 def mostrar_extrato(cliente):
-    print("\n===== EXTRATO =====")
+    print("\n===== EXTRATO ===============")
     if not cliente['extrato']:
         print("Nenhuma movimentação encontrada.")
     else:
@@ -146,33 +169,44 @@ def mostrar_extrato(cliente):
     print("====================")
     input("\n👉 Pressione ENTER para voltar ao menu...")
 
+
 # ===================== MAIN =====================
 def main():
-    print("===== BEM-VINDO AO BANCO =====")
-    escolha = input("Você já tem conta? (s/n): ").lower()
+    print("===== BEM-VINDO AO BANCO =======")
 
-    if escolha == 's':
-        # Cliente fixo para teste
-        cliente = {
-            'nome': 'Pedro Carvalho',
-            'agencia': '011',
-            'conta': 'teste',
-            'senha': 'brunna19',
-            'saldo': 1500.0,
-            'pix': {
-                'cpf': "040.747.111-17"
-            },
-            'cartao_limite': 1800.0,
-            'extrato': []
-        }
-    else:
-        cliente = criar_conta()
+    cliente = None
 
-    if not login(cliente):
-        return
+    # Loop para criar conta ou usar conta existente
+    while cliente is None:
+        escolha = input("Você já tem conta? (s/n): ").lower()
+        
+        if escolha == 's':
+            cliente = {
+                'nome': 'Pedro Carvalho',
+                'agencia': '011',
+                'conta': 'teste',
+                'senha': 'brunna19',
+                'saldo': 50000.0,
+                'pix': {'cpf': "040.747.111-17"},
+                'cartao_limite': 1800.0,
+                'extrato': []
+            }
+        elif escolha == 'n':
+            cliente = criar_conta()
+        else:
+            print("⚠️ Opção inválida. Digite 's' ou 'n'.\n")
+
+    # Loop de login
+    while True:
+        if login(cliente):
+            print("✅ Login realizado com sucesso!")
+            break
+        else:
+            print("⚠️ Dados incorretos. Tente novamente.\n")
 
     mostrar_pagina_inicial(cliente)
 
+    # Loop do menu
     while True:
         menu()
         opcao = input("Escolha uma opção: ")
@@ -202,3 +236,4 @@ def main():
 # ===================== INICIAR PROGRAMA =====================
 if __name__ == "__main__":
     main()
+
